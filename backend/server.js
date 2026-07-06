@@ -17,9 +17,15 @@ const PORT = process.env.PORT || 3001;
 
 app.use(helmet());
 app.use(morgan("dev"));
-app.use(cors({ origin: ["http://localhost:3000", "https://softlinkoptions.co.ke"], credentials: true }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const allowedOrigins = (
+    process.env.ALLOWED_ORIGINS ||
+    "http://localhost:3000"
+).split(",");
+
+app.use(cors({
+    origin: allowedOrigins,
+    credentials: true
+}));
 
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 120 });
 app.use(limiter);
